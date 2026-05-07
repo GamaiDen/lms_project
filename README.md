@@ -3,27 +3,31 @@
 Платформа для онлайн-обучения на Django REST Framework.
 
 ## Функциональность
-- CRUD для курсов (ViewSet)
-- CRUD для уроков (Generic Views)
-- Кастомная модель User (AbstractBaseUser, email)
+- CRUD для курсов и уроков
+- Пользователи и аутентификация (JWT)
+- Подписки на курсы
+- Платежи через Stripe
+- Валидация видео-ссылок (YouTube)
+- Пагинация
+- Документация Swagger
+- **Celery + Celery Beat** (фоновые задачи)
+- **Redis** (кеширование + брокер)
 
-## API Endpoints
+## Celery задачи
+- `send_course_update_email` — рассылка подписчикам при обновлении курса
+- `check_last_login` — блокировка пользователей, не входивших 30+ дней
 
-### Курсы
-- GET /api/courses/ — список курсов
-- POST /api/courses/ — создать курс
-- GET /api/courses/{id}/ — курс с уроками
-- PUT /api/courses/{id}/ — обновить курс
-- DELETE /api/courses/{id}/ — удалить курс
-
-### Уроки
-- GET /api/lessons/ — список уроков
-- POST /api/lessons/ — создать урок
-- GET /api/lessons/{id}/ — один урок
-- PUT /api/lessons/{id}/ — обновить урок
-- DELETE /api/lessons/{id}/ — удалить урок
-
-## Установка
-pip install -r requirements.txt
-python manage.py migrate
+## Запуск
+```bash
+# Сервер
 python manage.py runserver
+
+# Celery Worker
+celery -A config worker -l info
+
+# Celery Beat
+celery -A config beat -l info
+
+# Redis
+redis-server
+
