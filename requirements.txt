@@ -3,3 +3,5 @@ Django==6.0.4
 djangorestframework==3.17.1
 pillow==12.2.0
 sqlparse==0.5.5
+drf-yasg==1.21.15
+stripe==15.1.0
