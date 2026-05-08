@@ -8,6 +8,7 @@ class LessonSerializer(serializers.ModelSerializer):
         model = Lesson
         fields = '__all__'
         validators = [URLValidator(field='video_url')]
+        read_only_fields = ['owner']
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -16,7 +17,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'preview', 'description', 'slug', 'lessons_count', 'lessons']
+        fields = ['id', 'name', 'preview', 'description', 'lessons_count', 'lessons']
 
     def get_lessons_count(self, obj):
         return obj.lessons.count()
@@ -28,18 +29,6 @@ class CourseCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CourseBriefSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Course
-        fields = ['id', 'name', 'slug']
-
-
-class LessonBriefSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lesson
-        fields = ['id', 'name', 'course']
-
-
 class CourseDetailSerializer(serializers.ModelSerializer):
     lessons_count = serializers.SerializerMethodField()
     lessons = LessonSerializer(many=True, read_only=True)
@@ -47,7 +36,7 @@ class CourseDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'preview', 'description', 'slug', 'lessons_count', 'lessons', 'is_subscribed']
+        fields = ['id', 'name', 'preview', 'description', 'lessons_count', 'lessons', 'is_subscribed']
 
     def get_lessons_count(self, obj):
         return obj.lessons.count()
@@ -58,3 +47,15 @@ class CourseDetailSerializer(serializers.ModelSerializer):
             from users.models import Subscription
             return Subscription.objects.filter(user=request.user, course=obj).exists()
         return False
+
+
+class CourseBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['id', 'name']
+
+
+class LessonBriefSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'name', 'course']
