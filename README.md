@@ -3,27 +3,30 @@
 Платформа для онлайн-обучения на Django REST Framework.
 
 ## Функциональность
-- CRUD для курсов (ViewSet)
-- CRUD для уроков (Generic Views)
-- Кастомная модель User (AbstractBaseUser, email)
+- CRUD для курсов и уроков
+- Пользователи и аутентификация (JWT)
+- Подписки на курсы
+- Платежи через Stripe
+- Валидация видео-ссылок (YouTube)
+- Пагинация
+- Документация Swagger
+- Celery + Celery Beat (фоновые задачи)
+- Redis (кеширование + брокер)
 
-## API Endpoints
+## 🐳 Запуск через Docker
 
-### Курсы
-- GET /api/courses/ — список курсов
-- POST /api/courses/ — создать курс
-- GET /api/courses/{id}/ — курс с уроками
-- PUT /api/courses/{id}/ — обновить курс
-- DELETE /api/courses/{id}/ — удалить курс
+```bash
+# Копируем .env
+cp .env.template .env
+# Заполни .env своими данными
 
-### Уроки
-- GET /api/lessons/ — список уроков
-- POST /api/lessons/ — создать урок
-- GET /api/lessons/{id}/ — один урок
-- PUT /api/lessons/{id}/ — обновить урок
-- DELETE /api/lessons/{id}/ — удалить урок
+# Запускаем все сервисы одной командой
+docker compose up -d --build
 
-## Установка
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+# Создаём суперпользователя
+docker compose exec web python manage.py createsuperuser
+
+# Открываем в браузере
+http://localhost/
+http://localhost/swagger/
+
